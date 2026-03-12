@@ -2,6 +2,8 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import axios from 'axios';
 
+const API = import.meta.env.VITE_API_URL;
+
 const AuthContext = createContext(null);
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -46,7 +48,7 @@ export function AuthProvider({ children }) {
   const fetchProfile = async (session) => {
     try {
       const token = session.access_token;
-      const res = await axios.get('/api/me', {
+      const res = await axios.get(`${API}/api/me`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setProfile(res.data);
