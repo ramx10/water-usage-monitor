@@ -3,6 +3,8 @@ import axios from 'axios';
 import Navbar from '../components/Navbar.jsx';
 import { useAuth } from '../components/AuthContext.jsx';
 
+const API = import.meta.env.VITE_API_URL;
+
 export default function Admin() {
   const { supabase } = useAuth();
   const [rows, setRows] = useState([]);
@@ -19,10 +21,10 @@ export default function Admin() {
       if (!token) return;
 
       const [usersRes, usageRes] = await Promise.all([
-        axios.get('/api/admin/users', {
+        axios.get(`${API}/api/admin/users`, {
           headers: { Authorization: `Bearer ${token}` }
         }),
-        axios.get('/api/admin/usage', {
+        axios.get(`${API}/api/admin/usage`,{
           headers: { Authorization: `Bearer ${token}` }
         })
       ]);
@@ -71,7 +73,7 @@ export default function Admin() {
       const token = session?.access_token;
       if (!token) return;
 
-      await axios.delete(`/api/admin/users/${row.id}`, {
+      await axios.delete(`${API}/api/admin/users/${row.id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

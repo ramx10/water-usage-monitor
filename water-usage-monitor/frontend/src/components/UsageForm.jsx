@@ -2,6 +2,8 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext.jsx';
 
+const API = import.meta.env.VITE_API_URL;
+
 export default function UsageForm({ onAdded }) {
   const { supabase } = useAuth();
   const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
@@ -32,7 +34,7 @@ export default function UsageForm({ onAdded }) {
       }
 
       await axios.post(
-        '/api/add-usage',
+        `${API}/api/add-usage`,
         { date, liters: value },
         { headers: { Authorization: `Bearer ${token}` } }
       );

@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { supabase } from '../components/AuthContext.jsx';
 
+const API = import.meta.env.VITE_API_URL;
+
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -16,7 +18,7 @@ export default function Login() {
 
     try {
       setSubmitting(true);
-      const res = await axios.post('/api/login', { email, password });
+      const res = await axios.post(`${API}/api/login`, { email, password });
 
       const { access_token, refresh_token } = res.data;
 

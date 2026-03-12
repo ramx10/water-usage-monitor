@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+const API = import.meta.env.VITE_API_URL;
+
 export default function Register() {
   const navigate = useNavigate();
   const [name, setName] = useState('');
@@ -18,7 +20,7 @@ export default function Register() {
 
     try {
       setSubmitting(true);
-      await axios.post('/api/register', { name, email, password });
+      await axios.post(`${API}/api/register`, { name, email, password });
       setSuccess('Account created. You can now sign in.');
 
       setTimeout(() => {
