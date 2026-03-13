@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext.jsx';
+const API = import.meta.env.VITE_API_URL;
 
 export default function UsageTable({ refreshSignal }) {
   const { supabase } = useAuth();
@@ -22,7 +23,7 @@ export default function UsageTable({ refreshSignal }) {
           return;
         }
 
-        const res = await axios.get('/api/usage-history', {
+        const res = await axios.get('${API}/api/usage-history', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setRows(res.data || []);

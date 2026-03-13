@@ -12,6 +12,8 @@ import {
   Filler
 } from 'chart.js';
 import { useAuth } from './AuthContext.jsx';
+const API = import.meta.env.VITE_API_URL;
+
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler);
 
@@ -35,7 +37,7 @@ export default function UsageChart({ refreshSignal }) {
           return;
         }
 
-        const res = await axios.get('/api/usage-graph', {
+        const res = await axios.get(`${API}/api/usage-graph`, { 
           headers: { Authorization: `Bearer ${token}` }
         });
         setPoints(res.data || []);

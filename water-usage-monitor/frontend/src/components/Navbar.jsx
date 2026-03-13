@@ -1,5 +1,6 @@
 import { useNavigate, NavLink } from 'react-router-dom';
 import { useAuth } from './AuthContext.jsx';
+const API = import.meta.env.VITE_API_URL;
 
 export default function Navbar() {
   const { user, profile, supabase } = useAuth();
