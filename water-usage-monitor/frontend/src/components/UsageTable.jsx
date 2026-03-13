@@ -6,16 +6,21 @@ export default function UsageTable({ refreshSignal }) {
   const { supabase } = useAuth();
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      setError('');
       try {
         const {
           data: { session }
         } = await supabase.auth.getSession();
         const token = session?.access_token;
-        if (!token) return;
+        if (!token) {
+          setError('Not authenticated. Please log in again.');
+          return;
+        }
 
         const res = await axios.get('/api/usage-history', {
           headers: { Authorization: `Bearer ${token}` }
@@ -24,6 +29,7 @@ export default function UsageTable({ refreshSignal }) {
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e);
+        setError(e.response?.data?.error || 'Failed to load usage history.');
       } finally {
         setLoading(false);
       }
@@ -47,6 +53,13 @@ export default function UsageTable({ refreshSignal }) {
       </div>
 
       <div className="relative max-h-72 overflow-auto rounded-2xl border border-sky-500/10 bg-slate-950/60">
+        {error && (
+          <div className="px-4 py-3 text-[11px] text-red-100">
+            <span className="rounded-full border border-red-500/40 bg-red-500/10 px-2 py-1">
+              {error}
+            </span>
+          </div>
+        )}
         <table className="min-w-full text-left text-[11px]">
           <thead className="sticky top-0 bg-slate-950/90 backdrop-blur-sm">
             <tr className="text-sky-300/80">

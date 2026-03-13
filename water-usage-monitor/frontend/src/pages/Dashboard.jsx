@@ -7,8 +7,6 @@ import UsageTable from '../components/UsageTable.jsx';
 import UsageChart from '../components/UsageChart.jsx';
 import { useAuth } from '../components/AuthContext.jsx';
 
-const API = import.meta.env.VITE_API_URL;
-
 export default function Dashboard() {
   const { supabase, profile } = useAuth();
   const [summary, setSummary] = useState({
@@ -35,7 +33,7 @@ export default function Dashboard() {
         const token = session?.access_token;
         if (!token) return;
 
-        const res = await axios.get(`${API}/api/usage-summary`, {
+        const res = await axios.get('/api/usage-summary', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setSummary(res.data);

@@ -19,16 +19,21 @@ export default function UsageChart({ refreshSignal }) {
   const { supabase } = useAuth();
   const [points, setPoints] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      setError('');
       try {
         const {
           data: { session }
         } = await supabase.auth.getSession();
         const token = session?.access_token;
-        if (!token) return;
+        if (!token) {
+          setError('Not authenticated. Please log in again.');
+          return;
+        }
 
         const res = await axios.get('/api/usage-graph', {
           headers: { Authorization: `Bearer ${token}` }
@@ -37,6 +42,7 @@ export default function UsageChart({ refreshSignal }) {
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e);
+        setError(e.response?.data?.error || 'Failed to load usage graph.');
       } finally {
         setLoading(false);
       }
@@ -129,11 +135,18 @@ export default function UsageChart({ refreshSignal }) {
       </div>
 
       <div className="relative mt-1 h-56 sm:h-64">
+        {error && (
+          <div className="absolute inset-0 flex items-center justify-center px-6 text-center text-xs text-red-100">
+            <span className="rounded-2xl border border-red-500/40 bg-red-500/10 px-3 py-2">
+              {error}
+            </span>
+          </div>
+        )}
         {loading ? (
           <div className="flex h-full items-center justify-center text-xs text-sky-300/80">
             Loading chart...
           </div>
-        ) : points.length === 0 ? (
+        ) : error ? null : points.length === 0 ? (
           <div className="flex h-full items-center justify-center text-center text-xs text-sky-300/80">
             Add a few days of logs to see your water usage trend.
           </div>
