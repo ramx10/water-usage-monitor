@@ -23,7 +23,7 @@ export default function UsageTable({ refreshSignal }) {
           return;
         }
 
-        const res = await axios.get('${API}/api/usage-history', {
+        const res = await axios.get(`${API}/api/usage-history`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setRows(res.data || []);
